@@ -9,10 +9,17 @@
 [![Live](https://img.shields.io/badge/live-zap.zap--files.workers.dev-brightgreen?style=flat-square)](https://zap.zap-files.workers.dev)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 [![Built on Cloudflare Workers](https://img.shields.io/badge/cloudflare-workers-F38020?style=flat-square&logo=cloudflare&logoColor=white)](https://workers.cloudflare.com)
+[![Docs](https://img.shields.io/badge/docs-Google%20Docs-4285F4?style=flat-square&logo=googledocs&logoColor=white)](https://docs.google.com/document/d/1VfMF_COy8hM_mf03bPSOm7bFpykexB-2pKqZTsBW0FE/edit?usp=sharing)
 
 </div>
 
 ---
+
+<div align="center">
+
+![Visitors](https://visitor-badge.laobi.icu/badge?page_id=RitwikRishRaj.Zap)
+
+</div>
 
 ## What is Zap?
 
