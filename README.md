@@ -199,7 +199,7 @@ Without TURN keys, Zap falls back to `stun:stun.cloudflare.com:3478` and the ser
 
 ## Built by
 
-[GDG On Campus · KIIT](https://gdg-kiit.vercel.app), Bhubaneswar — Google Developer Groups student community.
+[GDG On Campus · KIIT · Cloud Team](https://gdg-kiit.vercel.app), Bhubaneswar — Google Developer Groups student community.
 
 ---
 
