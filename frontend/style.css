@@ -793,7 +793,7 @@ body.light .card-spotlight { background: radial-gradient(400px circle at var(--m
 .card-desc { font-size: 0.8rem; color: var(--s6); line-height: 1.75; font-weight: 300; flex: 1; }
 
 /* ════════════════════════════════
-   FOOTER
+FOOTER: LAYOUT, GDG INFO AND DEV SECTION 
 ════════════════════════════════ */
 .footer-wrap { border-top: 1px solid var(--s3); padding: 4rem 2rem 2.5rem; max-width: 1080px; margin: 0 auto; }
 .footer-top {
@@ -848,6 +848,7 @@ body.light .card-spotlight { background: radial-gradient(400px circle at var(--m
 .dev-card-quote { font-size: 0.72rem; color: var(--s6); margin-top: 0.35rem; font-style: italic; line-height: 1.5; }
 .li-arrow { flex-shrink: 0; opacity: 0.3; transition: opacity 0.18s; }
 .dev-card-active:hover .li-arrow { opacity: 0.7; }
+/* ── Footer Bottom ───────────────────────── */
 .footer-bottom { display: flex; align-items: center; justify-content: center; padding-top: 2rem; }
 .footer-copy { font-family: var(--font-mono); font-size: 0.6rem; color: var(--s5); letter-spacing: 0.06em; }
 
