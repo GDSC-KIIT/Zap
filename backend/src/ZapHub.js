@@ -29,9 +29,10 @@ export class ZapHub {
     this.state = state;
     this.env = env;
 
-    this.rooms   = new Map(); // roomId → RoomObject
+    // track rooms, IPs, and relay sessions in memory
+    this.rooms = new Map(); // roomId → RoomObject
     this.ipCount = new Map(); // ip → count
-    this.relays  = new Map(); // senderId → RelayObject
+    this.relays = new Map(); // senderId → RelayObject
   }
 
   // ── DO HTTP Interface ─────────────────────────────
@@ -41,8 +42,8 @@ export class ZapHub {
       return this.#handleWsUpgrade(request);
     }
 
-    const url    = new URL(request.url);
-    const path   = url.pathname;
+    const url = new URL(request.url);
+    const path = url.pathname;
     const method = request.method;
 
     if (path === '/internal/room-stats' && method === 'GET') {
@@ -193,8 +194,9 @@ export class ZapHub {
 
   // ── Room Management ───────────────────────────────
 
+  // create a new room and add the first client
   #createRoom(ws, clientId, clientIp, data = {}, attachment) {
-    const maxRooms     = parseInt(this.env.MAX_ROOMS_PER_IP) || 10;
+    const maxRooms = parseInt(this.env.MAX_ROOMS_PER_IP) || 10;
     const currentCount = this.ipCount.get(clientIp) || 0;
 
     if (currentCount >= maxRooms) {
@@ -202,8 +204,8 @@ export class ZapHub {
       return;
     }
 
-    const roomId    = generateRoomId();
-    const ttlHours  = parseInt(this.env.DEFAULT_ROOM_TTL_HOURS) || 24;
+    const roomId = generateRoomId();
+    const ttlHours = parseInt(this.env.DEFAULT_ROOM_TTL_HOURS) || 24;
     const expiresAt = Date.now() + ttlHours * 60 * 60 * 1000;
 
     const room = {
@@ -335,6 +337,7 @@ export class ZapHub {
 
   // ── Server-Side Relay ─────────────────────────────
 
+  // set up relay when direct p2p connection fails
   #relayRequest(ws, clientId, roomId, data = {}) {
     const { targetId, metadata = {} } = data;
     const maxRelays = parseInt(this.env.MAX_CONCURRENT_RELAYS) || 3;
@@ -365,7 +368,7 @@ export class ZapHub {
     this.relays.set(clientId, relay);
     this.#send(ws, { type: 'relay_initiated', relayId: clientId });
 
-    const room     = roomId ? this.rooms.get(roomId) : null;
+    const room = roomId ? this.rooms.get(roomId) : null;
     const receiver = room?.clients.get(targetId);
     if (receiver) {
       this.#send(receiver.ws, {
@@ -415,7 +418,7 @@ export class ZapHub {
     }
 
     relay.receiverWs = ws;
-    relay.status     = 'active';
+    relay.status = 'active';
 
     while (relay.buffer.length > 0) {
       const chunk = relay.buffer.shift();
@@ -438,7 +441,7 @@ export class ZapHub {
       bytesTransferred: relay.bytesTransferred,
     });
 
-    try { relay.senderWs?.send(endMsg); }   catch { }
+    try { relay.senderWs?.send(endMsg); } catch { }
     try { relay.receiverWs?.send(endMsg); } catch { }
 
     this.relays.delete(clientId);
@@ -446,6 +449,7 @@ export class ZapHub {
 
   // ── Disconnection Cleanup ─────────────────────────
 
+  // clean up when a peer disconnects
   #handleDisconnection(clientId, roomId) {
     this.#endRelay(clientId, 'disconnected');
 
@@ -476,15 +480,15 @@ export class ZapHub {
   // ── Stats ─────────────────────────────────────────
 
   #getRoomStats() {
-    const now    = Date.now();
+    const now = Date.now();
     const active = Array.from(this.rooms.values()).filter(r => now <= r.expiresAt);
     return {
-      totalRooms:       this.rooms.size,
-      activeRooms:      active.length,
-      expiredRooms:     this.rooms.size - active.length,
-      totalClients:     active.reduce((s, r) => s + r.clients.size, 0),
+      totalRooms: this.rooms.size,
+      activeRooms: active.length,
+      expiredRooms: this.rooms.size - active.length,
+      totalClients: active.reduce((s, r) => s + r.clients.size, 0),
       totalStorageUsed: Array.from(this.rooms.values()).reduce((s, r) => s + r.storageUsed, 0),
-      activeRelays:     Array.from(this.relays.values()).filter(r => r.status === 'active').length,
+      activeRelays: Array.from(this.relays.values()).filter(r => r.status === 'active').length,
     };
   }
 
