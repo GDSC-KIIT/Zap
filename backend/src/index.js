@@ -332,7 +332,7 @@ function formatBytes(bytes) {
 
 // ── Cloud Hold Handlers ───────────────────────────────
 
-// 6-char room code, skips confusing chars like O and I
+// 6-char room code
 function cloudRoomCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code = '';
